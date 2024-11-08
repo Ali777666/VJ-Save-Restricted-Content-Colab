@@ -11,6 +11,7 @@ import time
 import os
 import threading
 import json
+from decouple import config
 from config import API_ID, API_HASH
 from database.db import database 
 from TechVJ.strings import strings, HELP_TXT
