@@ -66,14 +66,7 @@ def progress(current, total, message, type):
 # start command
 @Client.on_message(filters.command(["start"]))
 async def send_start(client: Client, message: Message):
-    buttons = [[
-        InlineKeyboardButton("𝐖𝐎𝐎𝐃𝐜𝐫𝐚𝐟𝐭", url = "https://t.me/Farooq_is_King")
-    ],[
-        InlineKeyboardButton('🔍 WD Topic Group', url='https://t.me/Op_Topic_Group'),
-        InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/Opleech_WD')
-	]]
-    reply_markup = InlineKeyboardMarkup(buttons)
-    await client.send_message(message.chat.id, f"<b>👋 Hi {message.from_user.mention}, I am Save Restricted Content Bot, I can send you restricted content by its post link.\n\nFor downloading restricted content /login first.\n\nKnow how to use bot by - /help</b>", reply_markup=reply_markup, reply_to_message_id=message.id)
+    await client.send_message(message.chat.id, f"<b>👋 Hi {message.from_user.mention}, I am Save Restricted Content Bot, I can send you restricted content by its post link.\n\nFor downloading restricted content, send me the link of the post you want to save.</b>")
     return
 
 
@@ -81,6 +74,16 @@ async def send_start(client: Client, message: Message):
 @Client.on_message(filters.command(["help"]))
 async def send_help(client: Client, message: Message):
     await client.send_message(message.chat.id, f"{HELP_TXT}")
+# cancel command
+@Client.on_message(filters.command(["cancel"]))
+async def cancel_command(client: Client, message: Message):
+    task = user_tasks.get(message.chat.id)
+    if task:
+        task.cancel()
+        del user_tasks[message.chat.id]
+        await client.send_message(message.chat.id, "Your task has been cancelled.", reply_to_message_id=message.id)
+    else:
+        await client.send_message(message.chat.id, "There is no ongoing task to cancel.", reply_to_message_id=message.id)
 
 @Client.on_message(filters.text & filters.private)
 async def save(client: Client, message: Message):
